@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   NotFoundException,
   Param,
@@ -119,5 +120,20 @@ export class PostsController {
     posts = posts.map((prevPost) => (prevPost.id === +id ? post : prevPost));
 
     return post;
+  }
+
+  // 5) DELETE /posts/:id
+  // id에 해당되는 Post를 삭제한다.
+  @Delete(':id')
+  deletePost(@Param('id') id: string) {
+    const post = posts.find((post) => post.id === +id);
+
+    if (!post) {
+      throw new NotFoundException();
+    }
+
+    posts = posts.filter((post) => post.id !== +id);
+
+    return id;
   }
 }
