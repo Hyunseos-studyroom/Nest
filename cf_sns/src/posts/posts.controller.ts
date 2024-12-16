@@ -4,6 +4,7 @@ import {
   Get,
   NotFoundException,
   Param,
+  Patch,
   Post,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
@@ -85,6 +86,38 @@ export class PostsController {
       commentCount: 0,
     };
     posts = [...posts, post];
+    return post;
+  }
+
+  // 4) PATCH /posts/:id
+  // id에 해당되는 Post를 변경한다.
+  @Patch(':id')
+  patchPost(
+    @Param('id') id: string,
+    @Body('author') author?: string,
+    @Body('title') title?: string,
+    @Body('content') content?: string,
+  ) {
+    const post = posts.find((post) => post.id === +id);
+
+    if (!post) {
+      throw new NotFoundException();
+    }
+
+    if (author) {
+      post.author = author;
+    }
+
+    if (title) {
+      post.title = title;
+    }
+
+    if (content) {
+      post.content = content;
+    }
+
+    posts = posts.map((prevPost) => (prevPost.id === +id ? post : prevPost));
+
     return post;
   }
 }
