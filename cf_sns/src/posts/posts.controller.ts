@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { PostsService } from './posts.service';
 
 interface PostModel {
@@ -41,10 +41,18 @@ let posts: PostModel[] = [
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
-  // GET /posts
+  // 1) GET /posts
   // 모든 posts를 다 가져온다.
   @Get()
   getPosts(): PostModel[] {
     return posts;
+  }
+
+  // 2) GET /posts/:id
+  // id에 해당되는 Post를 가져온다.
+  // 예를 들어 id===1일 경우 id가 1인 포스트를 가져온다.
+  @Get(':id')
+  getPost(@Param('id') id: string): PostModel {
+    return posts.find((post) => post.id === +id);
   }
 }
